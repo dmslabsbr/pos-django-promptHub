@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Excluir Prompt{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card border-danger" style="border-color: var(--ph-danger) !important;">
+      <div class="card-body p-4 text-center">
+        <i class="bi bi-exclamation-triangle display-4" style="color: var(--ph-danger);"></i>
+        <h1 class="h4 mt-3 mb-1">Excluir Prompt</h1>
+        <p class="text-muted-ph mb-4">
+          Tem certeza que deseja excluir o prompt<br>
+          <strong class="text-white">« {{ prompt.titulo }} »</strong>?<br>
+          <small class="text-danger">Esta ação não pode ser desfeita.</small>
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-trash me-1"></i>Sim, excluir
+            </button>
+            <a href="{% url 'prompts:detalhe' prompt.pk %}" class="btn btn-outline-secondary">
+              Cancelar
+            </a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

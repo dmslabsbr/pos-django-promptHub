@@ -1,0 +1,70 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.secrets/
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Pastas antigas de apps (resquícios da reorganização)
+/hello_world/
+/exemplo/
+/hello_world_project/
+/projetos_tmp
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+/staticfiles/
+/media/
+
+# Debug / backup gerados (não versionar)
+debug_output.txt
+debug_output_utf8.txt
+backup_sqlite.json
+verification_report.txt
+tipos.txt
+*.bkp
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment
+.env
+.env.local
+# .env.example deve ser versionado (não contém credenciais)
+!.env.example

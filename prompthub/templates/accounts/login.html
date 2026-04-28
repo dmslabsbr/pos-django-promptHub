@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Entrar{% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-5">
+    <div class="text-center mb-4">
+      <h1 class="section-title">Bem-vindo de volta</h1>
+      <p class="text-muted-ph">Entre para explorar e compartilhar prompts</p>
+    </div>
+
+    <div class="card shadow-lg" style="border: 1px solid rgba(14, 165, 233, 0.2);">
+      <div class="card-body p-4">
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="id_username" class="form-label">Usuário</label>
+            <input type="text" name="username" id="id_username" class="form-control"
+                   placeholder="Nome de usuário" required autofocus />
+          </div>
+
+          <div class="mb-4">
+            <label for="id_password" class="form-label">Senha</label>
+            <input type="password" name="password" id="id_password" class="form-control"
+                   placeholder="Sua senha" required />
+          </div>
+
+          <button type="submit" class="btn-primary-ph btn w-100 py-2">
+            <i class="bi bi-box-arrow-in-right me-2"></i>Entrar
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <p class="text-center text-muted-ph small mt-3">
+      Não tem conta? <a href="{% url 'accounts:registro' %}">Criar conta grátis</a>
+    </p>
+  </div>
+</div>
+
+{% endblock %}

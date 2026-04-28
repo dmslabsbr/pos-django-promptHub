@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}{{ prompt.titulo }}{% endblock %}
+{% block meta_description %}{{ prompt.descricao }}{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb" class="mb-4">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Explorar</a></li>
+    <li class="breadcrumb-item active text-muted-ph" aria-current="page">{{ prompt.titulo|truncatechars:40 }}</li>
+  </ol>
+</nav>
+
+<div class="row g-4">
+
+  <!-- ── Coluna principal ─────────────────────────── -->
+  <div class="col-lg-8">
+
+    <!-- Cabeçalho -->
+    <div class="mb-4">
+      <span class="badge-cat mb-2 d-inline-block">{{ prompt.get_categoria_display }}</span>
+      <h1 class="section-title mb-1">{{ prompt.titulo }}</h1>
+      <p class="text-muted-ph mb-3">{{ prompt.descricao }}</p>
+
+      <div class="d-flex flex-wrap gap-3 align-items-center">
+        <small class="text-muted-ph">
+          <i class="bi bi-person-circle me-1"></i>
+          <strong class="text-white">{{ prompt.autor.username }}</strong>
+        </small>
+        <small class="text-muted-ph">
+          <i class="bi bi-calendar3 me-1"></i>
+          {{ prompt.created_at|date:"d/m/Y" }}
+        </small>
+        {% if prompt.updated_at != prompt.created_at %}
+        <small class="text-muted-ph">
+          <i class="bi bi-pencil me-1"></i>atualizado {{ prompt.updated_at|date:"d/m/Y" }}
+        </small>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Conteúdo do prompt -->
+    <div class="mb-4">
+      <h2 class="h6 text-muted-ph mb-2"><i class="bi bi-code-square me-2" style="color: var(--ph-primary);"></i>Conteúdo do Prompt</h2>
+      <div class="prompt-content" style="border: 1px solid var(--ph-border); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);">{{ prompt.conteudo }}</div>
+
+      <!-- Botão copiar -->
+      <div class="mt-3">
+        <button class="btn btn-sm btn-outline-primary px-3 rounded-pill" onclick="copiarPrompt()" id="btn-copiar" style="transition: all 0.2s;">
+          <i class="bi bi-clipboard me-1"></i>Copiar prompt
+        </button>
+      </div>
+    </div>
+
+    <!-- Ações do autor -->
+    {% if e_autor %}
+    <div class="d-flex gap-2 mb-4 pt-2">
+      <a href="{% url 'prompts:editar' prompt.pk %}" class="btn btn-sm btn-outline-warning rounded-pill px-3">
+        <i class="bi bi-pencil me-1"></i>Editar
+      </a>
+      <a href="{% url 'prompts:excluir' prompt.pk %}" class="btn btn-sm btn-outline-danger rounded-pill px-3">
+        <i class="bi bi-trash me-1"></i>Excluir
+      </a>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- ── Sidebar de avaliação ─────────────────────── -->
+  <div class="col-lg-4">
+
+    <!-- Card de avaliação -->
+    <div class="card mb-4">
+      <div class="card-body text-center">
+        <h3 class="h6 text-muted-ph mb-3"><i class="bi bi-star-half me-1"></i>Avaliação da comunidade</h3>
+
+        {% if media %}
+        <div class="mb-1" style="font-size:2.5rem; color: var(--ph-star);">
+          {{ media|floatformat:1 }}
+        </div>
+        <div class="stars mb-1">
+          {% with nota=media|floatformat:0|add:"0" %}
+            {% for i in "12345" %}{% if forloop.counter <= nota %}★{% else %}☆{% endif %}{% endfor %}
+          {% endwith %}
+        </div>
+        <small class="text-muted-ph">{{ total_avaliacoes }} avaliaç{{ total_avaliacoes|pluralize:"ão,ões" }}</small>
+        {% else %}
+        <p class="text-muted-ph small mb-0">Ainda sem avaliações. Seja o primeiro!</p>
+        {% endif %}
+
+        <hr />
+
+        <!-- Formulário de avaliação -->
+        {% if user.is_authenticated and not e_autor %}
+          {% if ja_avaliou %}
+          <p class="small text-muted-ph mb-0"><i class="bi bi-check-circle me-1 text-success"></i>Você já avaliou este prompt.</p>
+          {% else %}
+          <p class="small text-muted-ph mb-2">Qual nota você dá a este prompt?</p>
+          <form method="post" action="{% url 'prompts:avaliar' prompt.pk %}">
+            {% csrf_token %}
+            <input type="hidden" name="nota" id="nota-input" value="" />
+            <div class="stars-rating-input d-flex justify-content-center mb-3">
+              {% for i in "12345" %}
+              <button type="button" class="star-btn" data-nota="{{ forloop.counter }}"
+                      onclick="selecionarEstrela({{ forloop.counter }})"
+                      onmouseover="hover({{ forloop.counter }})"
+                      onmouseout="resetHover()">
+                ☆
+              </button>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn-primary-ph btn btn-sm w-100" id="btn-avaliar" disabled>
+              <i class="bi bi-star me-1"></i>Avaliar
+            </button>
+          </form>
+          {% endif %}
+        {% elif e_autor %}
+        <p class="small text-muted-ph mb-0"><i class="bi bi-person me-1"></i>Você é o autor deste prompt.</p>
+        {% else %}
+        <a href="{% url 'accounts:login' %}?next={{ request.path }}" class="btn btn-sm btn-outline-secondary w-100">
+          <i class="bi bi-box-arrow-in-right me-1"></i>Entre para avaliar
+        </a>
+        {% endif %}
+
+      </div>
+    </div>
+
+    <!-- Detalhes rápidos -->
+    <div class="card">
+      <div class="card-body">
+        <h3 class="h6 text-muted-ph mb-3">Informações</h3>
+        <ul class="list-unstyled mb-0">
+          <li class="mb-2">
+            <small class="text-muted-ph">Categoria</small><br>
+            <span class="badge-cat">{{ prompt.get_categoria_display }}</span>
+          </li>
+          <li class="mb-2">
+            <small class="text-muted-ph">Autor</small><br>
+            <strong class="text-ph-info">{{ prompt.autor.username }}</strong>
+          </li>
+          <li>
+            <small class="text-muted-ph">Publicado em</small><br>
+            <span class="text-ph-info">{{ prompt.created_at|date:"d/m/Y" }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  // ── Seleção de estrelas ────────────────────────────
+  let notaAtual = 0;
+
+  function selecionarEstrela(n) {
+    notaAtual = n;
+    document.getElementById('nota-input').value = n;
+    document.getElementById('btn-avaliar').disabled = false;
+    atualizarEstrelas(n, true);
+  }
+
+  function hover(n) { atualizarEstrelas(n, false); }
+
+  function resetHover() { atualizarEstrelas(notaAtual, true); }
+
+  function atualizarEstrelas(n, fixar) {
+    document.querySelectorAll('.star-btn').forEach((btn, idx) => {
+      btn.textContent = idx < n ? '★' : '☆';
+      btn.classList.toggle('active', fixar && idx < n);
+      btn.style.color = idx < n ? 'var(--ph-star)' : 'var(--ph-surface-3)';
+    });
+  }
+
+  // ── Copiar prompt ──────────────────────────────────
+  function copiarPrompt() {
+    const conteudo = document.querySelector('.prompt-content').innerText;
+    navigator.clipboard.writeText(conteudo).then(() => {
+      const btn = document.getElementById('btn-copiar');
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Copiado!';
+      btn.classList.add('text-success');
+      setTimeout(() => {
+        btn.innerHTML = '<i class="bi bi-clipboard me-1"></i>Copiar prompt';
+        btn.classList.remove('text-success');
+      }, 2000);
+    });
+  }
+</script>
+{% endblock %}
