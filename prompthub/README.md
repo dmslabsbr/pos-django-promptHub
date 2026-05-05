@@ -11,6 +11,13 @@ Read in Portuguese: [README.pt-BR.md](README.pt-BR.md)
 
 ---
 
+## 📺 Showcase
+
+Watch the usage example video: [https://youtu.be/jm3Hg_0tp84](https://youtu.be/jm3Hg_0tp84)
+
+![PromptHub Dashboard](../img/PH1.png)
+![PromptHub Detail](../img/PH2.png)
+
 ## 📦 Project Structure
 
 ```

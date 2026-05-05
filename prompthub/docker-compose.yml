@@ -4,9 +4,9 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: prompthub
-      POSTGRES_USER: prompthub
-      POSTGRES_PASSWORD: prompthub1234
+      POSTGRES_DB: ${DB_NAME:-prompthub}
+      POSTGRES_USER: ${DB_USER:-prompthub}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

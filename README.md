@@ -11,6 +11,13 @@ This repository contains Django projects and technical specifications for the AI
 - **Location:** [`/prompthub`](prompthub/)
 - **Documentation:** See [`prompthub/README.md`](prompthub/README.md) for installation and usage instructions.
 
+## 📺 Showcase
+
+Watch the usage example video: [https://youtu.be/jm3Hg_0tp84](https://youtu.be/jm3Hg_0tp84)
+
+![PromptHub Dashboard](img/PH1.png)
+![PromptHub Detail](img/PH2.png)
+
 ## 🧩 Design System
 
 All projects in this repository follow the official UI specification:

@@ -11,6 +11,13 @@ Read in English: [README.md](README.md)
 
 ---
 
+## 📺 Demonstração
+
+Assista ao vídeo de exemplo de uso: [https://youtu.be/jm3Hg_0tp84](https://youtu.be/jm3Hg_0tp84)
+
+![PromptHub Dashboard](../img/PH1.png)
+![PromptHub Detail](../img/PH2.png)
+
 ## 📦 Estrutura do projeto
 
 ```
