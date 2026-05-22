@@ -4,6 +4,7 @@ from django.contrib import messages, auth
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils.http import url_has_allowed_host_and_scheme
 
 from .forms import RegistroForm
 
@@ -39,6 +40,12 @@ def login_view(request):
             login(request, user)
             messages.success(request, f"✅ Olá, {user.username}! Bem-vindo de volta.")
             next_url = request.GET.get("next", "/")
+            if not url_has_allowed_host_and_scheme(
+                url=next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                next_url = "/"
             return redirect(next_url)
         else:
             messages.error(request, "❌ Usuário ou senha incorretos.")
