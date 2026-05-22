@@ -206,7 +206,10 @@
   <!-- ── Navbar ─────────────────────────────────────── -->
   <nav class="navbar navbar-expand-lg">
     <div class="container">
-      <a class="navbar-brand" href="/">⚡ Prompt<span>Hub</span></a>
+      <a class="navbar-brand d-flex flex-column align-items-start lh-1" href="/">
+        <span>⚡ Prompt<span>Hub</span></span>
+        <span style="font-size: .6rem; font-weight: 400; color: var(--ph-text-muted); letter-spacing: 0.5px;">v{{ APP_VERSION }}</span>
+      </a>
 
       <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
         <i class="bi bi-list fs-4" style="color: var(--ph-text);"></i>
@@ -273,6 +276,11 @@
   <footer class="text-center">
     <div class="container">
       <p class="mb-0">⚡ PromptHub &copy; {{ "now"|date:"Y" }} &mdash; Plataforma colaborativa de prompts para IA</p>
+      <p class="mb-0 mt-1">
+        <a href="https://github.com/dmslabsbr/pos-django-promptHub" target="_blank" rel="noopener noreferrer" style="color: var(--ph-text-muted); font-size: .75rem;">
+          <i class="bi bi-github me-1"></i>Github
+        </a>
+      </p>
     </div>
   </footer>
 
